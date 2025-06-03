@@ -9,6 +9,9 @@ jobs:
     deploy:
         if: github.event.label.name == 'deploy in staging'
         runs-on: ubuntu-latest
+        env:
+            MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+            MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
 
         steps:
             - name: Check if labeled on develop branch
