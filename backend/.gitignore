@@ -1,0 +1,7 @@
+.venv
+poetry.lock
+.env
+.ruff_cache
+*.egg-info
+build
+__pycache__
