@@ -18,3 +18,15 @@ deploy-backend-dev:
 
 deploy-backend-prod:
 	cd backend && modal deploy green_smoke_labs_expensynth/main.py --env prod
+
+create-migration-backend:
+	cd backend && python -m alembic revision -m "$(name)"
+
+create-auto-migration-backend:
+	cd backend && python -m alembic revision --autogenerate -m "$(name)"
+
+migrate-backend:
+	cd backend && python -m alembic upgrade head
+
+downgrade-migration-backend:
+	cd backend && python -m alembic downgrade $(version)

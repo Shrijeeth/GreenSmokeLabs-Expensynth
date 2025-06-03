@@ -37,11 +37,12 @@ def api_server():
     from fastapi import FastAPI, Request
 
     from green_smoke_labs_expensynth.api.router import api_router
+    from green_smoke_labs_expensynth.lifecycle import shutdown, startup
 
-    def lifespan(wapp: FastAPI):
-        print("Starting the app...")
+    async def lifespan(wapp: FastAPI):
+        await startup(wapp)
         yield
-        print("Shutting down the app...")
+        await shutdown(wapp)
 
     web_app = FastAPI(lifespan=lifespan)
     web_app.include_router(api_router)
