@@ -1,6 +1,5 @@
 import modal
 
-
 app = modal.App(
     name=f"green-smoke-labs-expensynth",
 )
