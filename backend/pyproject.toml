@@ -26,7 +26,7 @@ dependencies = [
     "llama-index-core==0.12.40",
     "llama-index-llms-litellm==0.5.1",
     "llama-index-vector-stores-qdrant==0.6.0",
-    "llama-index-embeddings-litellm==0.3.0",
+    "llama-index-embeddings-litellm==0.3.0"
 ]
 
 
