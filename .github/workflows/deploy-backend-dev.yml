@@ -1,0 +1,44 @@
+name: Deploy Backend (Dev)
+
+on:
+    pull_request:
+        branches: [main]
+        types: [labeled]
+
+jobs:
+    deploy:
+        if: github.event.label.name == 'deploy in staging'
+        runs-on: ubuntu-latest
+        env:
+            MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+            MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+
+        steps:
+            - name: Check if labeled on develop branch
+              id: check-branch
+              run: |
+                if [[ "${{ github.event.pull_request.head.ref }}" != "develop" ]]; then
+                    echo "PR not on develop branch. Exiting."
+                    exit 1
+                fi
+
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.11'
+
+            - name: Install Dependencies
+              run: |
+                python -m pip install --upgrade pip
+                make install-backend-dev
+
+            - name: Lint Check
+              run: |
+                make check-backend
+
+            - name: Deploy
+              run: |
+                make deploy-backend-dev
