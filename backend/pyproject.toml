@@ -22,11 +22,8 @@ dependencies = [
     "psycopg2-binary==2.9.10",
     "alembic==1.16.1",
     "asyncpg==0.30.0",
-    "llama-index==0.12.40",
-    "llama-index-core==0.12.40",
-    "llama-index-llms-litellm==0.5.1",
-    "llama-index-vector-stores-qdrant==0.6.0",
-    "llama-index-embeddings-litellm==0.3.0"
+    "crewai==0.126.0",
+    "crewai-tools[mcp]==0.47.0"
 ]
 
 
