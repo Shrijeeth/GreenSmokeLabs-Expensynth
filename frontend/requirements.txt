@@ -1,0 +1,7 @@
+gradio
+requests
+tqdm
+plotly
+qdrant-client
+openai
+dotenv
