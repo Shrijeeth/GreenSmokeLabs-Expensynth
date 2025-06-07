@@ -8,29 +8,31 @@ from green_smoke_labs_expensynth.configs.database import use_db_session
 from green_smoke_labs_expensynth.services.transaction_parsing_service import (
     TransactionParserWorkflow,
 )
+from green_smoke_labs_expensynth.utils.embeddings import TextFormatter
 
 from ..schemas.db_schemas import transactions
 from ..schemas.transaction_parsing_schemas import ParseTransactionRequest
 
 router = APIRouter()
+text_formatter = TextFormatter()
 
 
 @router.post("/parse-transaction")
 @use_db_session
-async def parse_transaction(params: ParseTransactionRequest, db, background_tasks: BackgroundTasks):
+async def parse_transaction(params: ParseTransactionRequest, background_tasks: BackgroundTasks, db=None):
     try:
         flow = TransactionParserWorkflow()
         response = await flow.kickoff_async(
             inputs=params.model_dump(),
         )
         background_tasks.add_task(_insert_into_db, db, response)
+        background_tasks.add_task(text_formatter.insert_into_vector_db, response.get("original_message"), response.get("data"))
 
         return response
     except Exception as e:
         raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@use_db_session
-async def _insert_into_db(db=None, response=None):
+async def _insert_into_db(db, response):
     print(f"Inserting into DB: {response}")
     data = response.get("data", {})
     message = response.get("original_message", "")
