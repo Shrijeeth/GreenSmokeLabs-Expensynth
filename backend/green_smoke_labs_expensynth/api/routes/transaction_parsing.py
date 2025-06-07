@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from fastapi import APIRouter, BackgroundTasks, HTTPException
+from sqlalchemy import insert
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 
 from green_smoke_labs_expensynth.configs.database import use_db_session
@@ -6,11 +9,8 @@ from green_smoke_labs_expensynth.services.transaction_parsing_service import (
     TransactionParserWorkflow,
 )
 
-from ..schemas.transaction_parsing_schemas import ParseTransactionRequest
 from ..schemas.db_schemas import transactions
-from datetime import datetime
-from sqlalchemy import insert
-
+from ..schemas.transaction_parsing_schemas import ParseTransactionRequest
 
 router = APIRouter()
 

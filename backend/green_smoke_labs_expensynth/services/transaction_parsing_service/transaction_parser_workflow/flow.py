@@ -73,6 +73,7 @@ class TransactionParserWorkflow(Flow):
             return {
                 "success": True,
                 "message": "Transaction parsed successfully",
+                "original_message": transaction_message,
                 "data": parsed_transaction_data.pydantic,
             }
         except Exception as e:
