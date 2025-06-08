@@ -37,7 +37,7 @@ async def _insert_into_db(db, response):
     data = response.get("data", {})
     message = response.get("original_message", "")
 
-    transaction_date = data.get("transaction_date")
+    transaction_date = data.transaction_date
     if not transaction_date:
         transaction_date = datetime.utcnow()
     else:
@@ -46,10 +46,10 @@ async def _insert_into_db(db, response):
             created_at=transaction_date,
             updated_at=transaction_date,
             user_id=606,
-            transaction_type=data.get("transaction_type"),
-            amount=data.get("transaction_amount"),
-            category=data.get("transaction_category"),
-            third_party=data.get("third_party_name"),
+            transaction_type=data.transaction_type,
+            amount=data.transaction_amount,
+            category=data.transaction_category,
+            third_party=data.third_party_name,
             message=message,
         )
 
