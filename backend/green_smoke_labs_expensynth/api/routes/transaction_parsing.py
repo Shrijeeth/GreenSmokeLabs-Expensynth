@@ -47,14 +47,14 @@ async def _insert_into_db(db, response):
         created_at=transaction_date,
         updated_at=transaction_date,
         user_id=606,
-        transaction_type=data.transaction_type,
+        transaction_type=data.transaction_type.value,
         amount=data.transaction_amount,
-        category=data.transaction_category,
+        category=data.transaction_category.value,
         third_party=data.third_party_name,
         message=message,
     )
 
     await db.execute(insert_stmt)
-    # await db.commit()
+    await db.commit()
     print("Transaction inserted into DB successfully")
     return {"success": True, "message": "Transaction saved", "data": data}
