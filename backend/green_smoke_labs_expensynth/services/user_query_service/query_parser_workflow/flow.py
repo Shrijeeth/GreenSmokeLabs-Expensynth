@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import yaml
 from crewai.agent import Agent
@@ -13,6 +14,9 @@ text_formatter = TextFormatter()
 
 
 class QdrantSearchTool(BaseTool):
+    qdrant_client:Optional[QdrantClient]=None
+    text_formatter: Optional[TextFormatter]=None
+    
     def __init__(self, qdrant_client, text_formatter):
         super().__init__(
             name="qdrant_search",
