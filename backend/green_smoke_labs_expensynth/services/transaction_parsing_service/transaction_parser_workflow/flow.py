@@ -46,7 +46,7 @@ class TransactionParserWorkflow(Flow):
                 goal=self.agents_config["financial_analyst"]["goal"],
                 backstory=self.agents_config["financial_analyst"]["backstory"],
                 llm=self.llm,
-                tools=[tools[1]],
+                tools=[tools[1], tools[-1]],
             )
 
             user_msg = f"""
