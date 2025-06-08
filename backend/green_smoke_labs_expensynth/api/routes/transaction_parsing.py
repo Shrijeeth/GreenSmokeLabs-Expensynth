@@ -42,18 +42,19 @@ async def _insert_into_db(db, response):
         transaction_date = datetime.utcnow()
     else:
         transaction_date = datetime.fromisoformat(transaction_date)
-        insert_stmt = insert(transactions).values(
-            created_at=transaction_date,
-            updated_at=transaction_date,
-            user_id=606,
-            transaction_type=data.transaction_type,
-            amount=data.transaction_amount,
-            category=data.transaction_category,
-            third_party=data.third_party_name,
-            message=message,
-        )
 
-        await db.execute(insert_stmt)
-        await db.commit()
+    insert_stmt = insert(transactions).values(
+        created_at=transaction_date,
+        updated_at=transaction_date,
+        user_id=606,
+        transaction_type=data.transaction_type,
+        amount=data.transaction_amount,
+        category=data.transaction_category,
+        third_party=data.third_party_name,
+        message=message,
+    )
 
+    await db.execute(insert_stmt)
+    # await db.commit()
+    print("Transaction inserted into DB successfully")
     return {"success": True, "message": "Transaction saved", "data": data}

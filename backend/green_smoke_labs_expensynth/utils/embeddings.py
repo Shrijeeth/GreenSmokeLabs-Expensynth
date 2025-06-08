@@ -49,7 +49,7 @@ class TextFormatter:
                 collection_name=self.qdrant_collection_name,
                 wait=True,
                 points=[
-                    PointStruct(id=str(uuid.uuid4()), vector=embedding, payload=payload),
+                    PointStruct(id=str(uuid.uuid4()), vector=embedding, payload=payload.model_dump()),
                 ]
             )
 
@@ -69,8 +69,8 @@ class TextFormatter:
         Transaction Amount: {payload.transaction_amount} AED.
         Card Number: {payload.card_number}
         Merchant Name: {payload.third_party_name},
-        Merchant Type: {payload.transaction_category}, 
-        Transaction Type (Debit/Credit): {payload.transaction_type}, 
+        Merchant Type: {payload.transaction_category.value}, 
+        Transaction Type (Debit/Credit): {payload.transaction_type.value}, 
         """
     # TODO:
     # --- Purpose: App Store Subscription Renewal.
