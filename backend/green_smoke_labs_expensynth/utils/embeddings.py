@@ -38,12 +38,7 @@ class TextFormatter:
         formatted_text = self._format_transaction_details(message, payload)
         print(f"Formatted text for embedding: {formatted_text}")
         try:
-            response = self.openai_client.embeddings.create(
-                input=formatted_text,
-                model=self.embedding_model
-            )
-
-            embedding = response.data[0].embedding
+            embedding = self._get_embeddings(formatted_text)
 
             self.qdrant_client.upsert(
                 collection_name=self.qdrant_collection_name,
@@ -74,4 +69,12 @@ class TextFormatter:
         """
     # TODO:
     # --- Purpose: App Store Subscription Renewal.
-    # --- Available balance: {available_balance} AED. 
+    # --- Available balance: {available_balance} AED.
+
+    def _get_embeddings(self, text: str) -> list[float]:
+        response = self.openai_client.embeddings.create(
+                input=text,
+                model=self.embedding_model
+            )
+
+        return response.data[0].embedding 
