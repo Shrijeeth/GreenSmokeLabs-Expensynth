@@ -19,8 +19,20 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    pass
+    op.create_table(
+        "transactions",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.TIMESTAMP(), nullable=True),
+        sa.Column("updated_at", sa.TIMESTAMP(), nullable=True),
+        sa.Column("user_id", sa.Integer(), nullable=True),
+        sa.Column("transaction_type", sa.String(), nullable=True),
+        sa.Column("amount", sa.Numeric(), nullable=True),
+        sa.Column("category", sa.String(), nullable=True),
+        sa.Column("third_party", sa.String(), nullable=True),
+        sa.Column("message", sa.String(), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+    )
 
 
 def downgrade() -> None:
-    pass
+    op.drop_table("transactions")

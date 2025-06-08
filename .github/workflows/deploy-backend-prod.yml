@@ -10,6 +10,11 @@ jobs:
         env:
             MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
             MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+            POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_PROD }}
+            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_PROD }}
+            POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_PROD }}
+            POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_PROD }}
+            POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_PROD }}
 
         steps:
             - name: Checkout
@@ -28,6 +33,10 @@ jobs:
             - name: Lint Check
               run: |
                 make check-backend
+
+            - name: Run Migrations
+              run: |
+                make migrate-backend
 
             - name: Deploy
               run: |
