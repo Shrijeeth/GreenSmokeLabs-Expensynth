@@ -20,7 +20,7 @@ class TextFormatter:
     def __init__(self):
         self.nebius_url = "https://api.studio.nebius.com/v1/"
         self.embedding_model = "intfloat/e5-mistral-7b-instruct"
-        
+
         self.qdrant_client_url = "https://9384a587-1ea8-44cf-a559-4205cc83e00c.us-west-2-0.aws.cloud.qdrant.io:6333"
         self.qdrant_collection_name = "expensynth_transactions"
 
@@ -33,8 +33,10 @@ class TextFormatter:
             url=self.qdrant_client_url,
             api_key=os.environ.get("QDRANT_API_KEY"),
         )
-    
-    def insert_into_vector_db(self, message: str, payload: ParsedTransactionData) -> bool:
+
+    def insert_into_vector_db(
+        self, message: str, payload: ParsedTransactionData
+    ) -> bool:
         formatted_text = self._format_transaction_details(message, payload)
         print(f"Formatted text for embedding: {formatted_text}")
         try:
@@ -44,8 +46,12 @@ class TextFormatter:
                 collection_name=self.qdrant_collection_name,
                 wait=True,
                 points=[
-                    PointStruct(id=str(uuid.uuid4()), vector=embedding, payload=payload.model_dump()),
-                ]
+                    PointStruct(
+                        id=str(uuid.uuid4()),
+                        vector=embedding,
+                        payload=payload.model_dump(),
+                    ),
+                ],
             )
 
             return True
@@ -53,11 +59,13 @@ class TextFormatter:
             print(f"Error inserting into vector DB: {e}")
             return False
 
-    def _format_transaction_details(self, message, payload: ParsedTransactionData) -> str:
+    def _format_transaction_details(
+        self, message, payload: ParsedTransactionData
+    ) -> str:
         """
         Formats the transaction details text before embedding.
         """
-        
+
         return f"""Transaction Details:
         Original transaction message: {message}
         Transaction Date: {payload.transaction_date}
@@ -67,14 +75,14 @@ class TextFormatter:
         Merchant Type: {payload.transaction_category.value}, 
         Transaction Type (Debit/Credit): {payload.transaction_type.value}, 
         """
+
     # TODO:
     # --- Purpose: App Store Subscription Renewal.
     # --- Available balance: {available_balance} AED.
 
     def _get_embeddings(self, text: str) -> list[float]:
         response = self.openai_client.embeddings.create(
-                input=text,
-                model=self.embedding_model
-            )
+            input=text, model=self.embedding_model
+        )
 
-        return response.data[0].embedding 
+        return response.data[0].embedding

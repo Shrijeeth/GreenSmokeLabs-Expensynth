@@ -11,6 +11,7 @@ from green_smoke_labs_expensynth.utils.embeddings import TextFormatter
 
 text_formatter = TextFormatter()
 
+
 class QdrantSearchTool(BaseTool):
     def __init__(self, qdrant_client, text_formatter):
         super().__init__(
@@ -19,7 +20,7 @@ class QdrantSearchTool(BaseTool):
                 "Searches the user's transaction history in Qdrant and returns relevant transactions. "
                 "Use this tool if the user query requires access to user-specific transaction data. "
                 "Input should be the user query string."
-            )
+            ),
         )
         self.qdrant_client = qdrant_client
         self.text_formatter = text_formatter
@@ -28,10 +29,11 @@ class QdrantSearchTool(BaseTool):
         search_results = self.qdrant_client.search(
             collection_name="expensynth_transactions",
             query_vector=self.text_formatter._get_embeddings(query),
-            limit=10
+            limit=10,
         )
         transactions = [hit.payload for hit in search_results]
         return str(transactions)
+
 
 class FinancialAssistantWorkflow(Flow):
     @start()
@@ -42,7 +44,9 @@ class FinancialAssistantWorkflow(Flow):
         temp_str = os.getenv("TRANSACTION_PARSER_LLM_TEMPERATURE")
         temperature = float(temp_str) if temp_str is not None else 0.7
         if not model:
-            raise ValueError("TRANSACTION_PARSER_LLM_MODEL environment variable is not set")
+            raise ValueError(
+                "TRANSACTION_PARSER_LLM_MODEL environment variable is not set"
+            )
         self.llm = LLM(
             model=model,
             api_key=api_key,

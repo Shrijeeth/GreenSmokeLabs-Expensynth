@@ -18,7 +18,9 @@ async def ask_bot(history: ChatHistory):
                 user_message = msg.content
                 break
         if not user_message:
-            raise HTTPException(status_code=400, detail="No user message found in chat history.")
+            raise HTTPException(
+                status_code=400, detail="No user message found in chat history."
+            )
 
         # Run the workflow
         flow = FinancialAssistantWorkflow()

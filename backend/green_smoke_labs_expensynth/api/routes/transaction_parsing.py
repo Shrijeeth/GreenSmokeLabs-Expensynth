@@ -19,18 +19,25 @@ text_formatter = TextFormatter()
 
 @router.post("/parse-transaction")
 @use_db_session
-async def parse_transaction(params: ParseTransactionRequest, background_tasks: BackgroundTasks, db=None):
+async def parse_transaction(
+    params: ParseTransactionRequest, background_tasks: BackgroundTasks, db=None
+):
     try:
         flow = TransactionParserWorkflow()
         response = await flow.kickoff_async(
             inputs=params.model_dump(),
         )
         background_tasks.add_task(_insert_into_db, db, response)
-        background_tasks.add_task(text_formatter.insert_into_vector_db, response.get("original_message"), response.get("data"))
+        background_tasks.add_task(
+            text_formatter.insert_into_vector_db,
+            response.get("original_message"),
+            response.get("data"),
+        )
 
         return response
     except Exception as e:
         raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 async def _insert_into_db(db, response):
     print(f"Inserting into DB: {response}")
