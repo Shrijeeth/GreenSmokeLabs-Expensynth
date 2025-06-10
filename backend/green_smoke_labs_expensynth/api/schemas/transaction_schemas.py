@@ -15,3 +15,9 @@ class YearlyTransactionSummaryResponse(BaseModel):
     credits: List[float]
     expenses: List[float]
     year: int = datetime.now().year  # Default to current year
+
+
+class YearlyCategoryDistributionResponse(BaseModel):
+    year: int
+    categories: List[str]
+    distribution: dict[str, float]

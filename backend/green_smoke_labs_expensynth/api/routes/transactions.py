@@ -6,11 +6,58 @@ from sqlalchemy import and_, case, extract, func, select
 
 from green_smoke_labs_expensynth.api.schemas.db_schemas import transactions
 from green_smoke_labs_expensynth.api.schemas.transaction_schemas import (
+    YearlyCategoryDistributionResponse,
     YearlyTransactionSummaryResponse,
 )
 from green_smoke_labs_expensynth.configs.database import use_db_session
+from green_smoke_labs_expensynth.utils.types import TransactionCategory
 
 router = APIRouter()
+
+
+@router.get(
+    "/transactions/category-distribution/{year}",
+    response_model=YearlyCategoryDistributionResponse,
+)
+@use_db_session
+async def get_category_distribution(
+    year: int = datetime.now().year,
+    user_id: int = 606,  # Default user_id, can be changed based on auth
+    db=None,
+):
+    """
+    Get financial distribution by category for a specific year, and return all categories.
+    """
+    try:
+        categories = TransactionCategory.get_all()
+        # Query to get sum(amount) grouped by category for the year
+        query = (
+            select(
+                transactions.c.category,
+                func.coalesce(func.sum(transactions.c.amount), 0).label("total"),
+            )
+            .where(
+                and_(
+                    transactions.c.user_id == user_id,
+                    extract("year", transactions.c.created_at) == year,
+                )
+            )
+            .group_by(transactions.c.category)
+        )
+        result = await db.execute(query)
+        data = dict(result.all())
+        # Ensure all categories are present in the response
+        distribution = {cat: float(data.get(cat, 0.0)) for cat in categories}
+        return {
+            "year": year,
+            "categories": categories,
+            "distribution": distribution,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching category distribution: {str(e)}"
+        )
+
 
 # Month number to abbreviation mapping
 MONTH_ABBR = {
