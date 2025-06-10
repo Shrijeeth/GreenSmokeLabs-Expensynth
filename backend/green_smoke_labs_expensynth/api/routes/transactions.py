@@ -42,6 +42,7 @@ async def get_category_distribution(
                     extract("year", transactions.c.created_at) == year,
                 )
             )
+            .where(transactions.c.transaction_type == "DEBIT")
             .group_by(transactions.c.category)
         )
         result = await db.execute(query)
