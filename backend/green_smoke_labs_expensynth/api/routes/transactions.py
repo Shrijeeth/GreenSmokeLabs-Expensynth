@@ -38,7 +38,7 @@ MONTH_ABBR = {
 async def get_monthly_transaction_summary(
     year: int = datetime.now().year,
     user_id: int = 606,  # Default user_id, can be changed based on auth
-    db: AsyncSession = Depends(),
+    db=None,
 ):
     """
     Get monthly credit and expenses summary for a specific year.
