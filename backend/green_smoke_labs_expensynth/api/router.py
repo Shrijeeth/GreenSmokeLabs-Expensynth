@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from green_smoke_labs_expensynth.api.routes import (
     health_check,
     transaction_parsing,
+    transactions,
     user_rag,
 )
 
@@ -17,4 +18,9 @@ api_router.include_router(
     user_rag.router,
     tags=["user_query"],
     prefix="/bot",
+)
+api_router.include_router(
+    transactions.router,
+    tags=["transactions"],
+    prefix="/api",
 )
