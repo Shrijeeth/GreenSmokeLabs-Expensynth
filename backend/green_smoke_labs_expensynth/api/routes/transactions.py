@@ -37,7 +37,7 @@ MONTH_ABBR = {
 @use_db_session
 async def get_monthly_transaction_summary(
     year: int = datetime.now().year,
-    user_id: int = 1,  # Default user_id, can be changed based on auth
+    user_id: int = 606,  # Default user_id, can be changed based on auth
     db: AsyncSession = Depends(),
 ):
     """
