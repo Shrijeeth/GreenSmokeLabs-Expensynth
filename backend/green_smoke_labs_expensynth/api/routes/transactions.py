@@ -1,9 +1,8 @@
 from datetime import datetime
 from typing import Any, Dict, List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import and_, case, extract, func, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from green_smoke_labs_expensynth.api.schemas.db_schemas import transactions
 from green_smoke_labs_expensynth.api.schemas.transaction_schemas import (
