@@ -53,12 +53,8 @@ async def get_monthly_transaction_summary(
         # Query to get monthly credit amounts
         credit_query = (
             select(
-                [
-                    extract("month", transactions.c.created_at).label("month"),
-                    func.coalesce(func.sum(transactions.c.amount), 0).label(
-                        "total_credit"
-                    ),
-                ]
+                extract("month", transactions.c.created_at).label("month"),
+                func.coalesce(func.sum(transactions.c.amount), 0).label("total_credit"),
             )
             .where(
                 and_(
@@ -73,12 +69,10 @@ async def get_monthly_transaction_summary(
         # Query to get monthly expense amounts
         expense_query = (
             select(
-                [
-                    extract("month", transactions.c.created_at).label("month"),
-                    func.coalesce(func.sum(transactions.c.amount), 0).label(
-                        "total_expense"
-                    ),
-                ]
+                extract("month", transactions.c.created_at).label("month"),
+                func.coalesce(func.sum(transactions.c.amount), 0).label(
+                    "total_expense"
+                ),
             )
             .where(
                 and_(
